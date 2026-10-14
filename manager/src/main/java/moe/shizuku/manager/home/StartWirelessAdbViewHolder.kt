@@ -63,8 +63,9 @@ class StartWirelessAdbViewHolder(binding: HomeStartWirelessAdbBinding, root: Vie
                 Settings.Global.putLong(cr, "adb_allowed_connection_time", 0L)
             }
         
-            val adbEnabled = Settings.Global.getInt(cr, Settings.Global.ADB_ENABLED, 0)
-            if (adbEnabled == 0) {
+            // Only prompt when USB debugging is known to be disabled; on Android 17+ the state
+            // may be unknown, in which case the discovery dialog guides the user instead
+            if (EnvironmentUtils.isAdbEnabled() == false) {
                 WadbEnableUsbDebuggingDialogFragment().show(context.asActivity<FragmentActivity>().supportFragmentManager)
                 return
             }
